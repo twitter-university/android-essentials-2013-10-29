@@ -31,7 +31,6 @@ public class TweetFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (BuildConfig.DEBUG) { Log.d(TAG, "created"); }
         super.onCreate(savedInstanceState);
 
         Resources rez = getResources();
