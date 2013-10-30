@@ -2,6 +2,7 @@ package com.twitter.university.android.yamba;
 
 import android.app.Fragment;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,9 +13,36 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.marakana.android.yamba.clientlib.YambaClient;
+import com.marakana.android.yamba.clientlib.YambaClientException;
 
 public class TweetFragment extends Fragment {
     private static final String TAG = "TWEET";
+
+    public class Poster extends AsyncTask<String, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(String... tweets) {
+            int ret = 0; //R.string.fail;
+            try {
+                new YambaClient("student", "password", "http://yamba.marakana.com/api")
+                    .postStatus(tweets[0]);
+                //ret = R.string.success;
+            }
+            catch (YambaClientException e) {
+                e.printStackTrace();
+            }
+
+            return Integer.valueOf(ret);
+        }
+
+        @Override
+        protected void onPostExecute(Integer ret) {
+            Toast.makeText(getActivity(), ret.intValue(), Toast.LENGTH_LONG);
+        }
+    }
 
 
     private int okColor;
@@ -47,9 +75,14 @@ public class TweetFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_tweet, container, false);
 
         viewCount = (TextView) v.findViewById(R.id.tweet_count);
-        viewTweet = (EditText) v.findViewById(R.id.tweet_tweet);
-        buttonSubmit = (Button) v.findViewById(R.id.tweet_submit);
 
+        buttonSubmit = (Button) v.findViewById(R.id.tweet_submit);
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { post(); }
+        });
+
+        viewTweet = (EditText) v.findViewById(R.id.tweet_tweet);
         viewTweet.addTextChangedListener(
             new TextWatcher() {
                 @Override
@@ -86,7 +119,16 @@ public class TweetFragment extends Fragment {
         viewCount.setTextColor(color);
     }
 
+    // clear the tweet box
+    // check for valid tweet
+    // handle mashing the submit button
+    void post() {
+        new Poster().execute(viewTweet.getText().toString());
+    }
+
     private boolean checkTweetLen(int n) {
         return (errMax < n) && (tweetLenMax > n);
     }
+
+
 }
