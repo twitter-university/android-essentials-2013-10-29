@@ -1,0 +1,15 @@
+# Generic
+*~
+*.swp
+.DS_Store
+
+# Gradle
+/.gradle
+
+# IntelliJ
+*.iws
+/.idea/workspace.xml
+/.idea/tasks.xml
+
+# Android
+/local.properties

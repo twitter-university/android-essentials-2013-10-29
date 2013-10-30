@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Yamba</string>
+    <string name="hello_world">Android Essentials</string>
+    <string name="action_settings">Settings</string>
+    <string name="tweet_label">Tweet</string>
+    <string name="tweet_count">140</string>
+    <string name="tweet_tweet">Whazzup?</string>
+    <string name="tweet_submit">Submit</string>
+
+</resources>
