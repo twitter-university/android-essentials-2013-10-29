@@ -1,6 +1,7 @@
 package com.twitter.university.android.yamba;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,28 +22,39 @@ import com.marakana.android.yamba.clientlib.YambaClientException;
 public class TweetFragment extends Fragment {
     private static final String TAG = "TWEET";
 
-    public class Poster extends AsyncTask<String, Void, Integer> {
+    public static class Poster extends AsyncTask<String, Void, Integer> {
+        private final Context ctxt;
+
+        public Poster(Context ctxt) { this.ctxt = ctxt; }
 
         @Override
         protected Integer doInBackground(String... tweets) {
-            int ret = 0; //R.string.fail;
+            int ret = R.string.tweet_failed;
             try {
                 new YambaClient("student", "password", "http://yamba.marakana.com/api")
                     .postStatus(tweets[0]);
-                //ret = R.string.success;
+                ret = R.string.tweet_succeeded;
             }
             catch (YambaClientException e) {
-                e.printStackTrace();
+                Log.w(TAG, "Post failed", e);
             }
 
             return Integer.valueOf(ret);
         }
 
         @Override
-        protected void onPostExecute(Integer ret) {
-            Toast.makeText(getActivity(), ret.intValue(), Toast.LENGTH_LONG);
+        protected void onCancelled() { finish(R.string.tweet_failed); }
+
+        @Override
+        protected void onPostExecute(Integer ret) { finish(ret.intValue()); }
+
+        private void finish(int ret) {
+            poster = null;
+            Toast.makeText(ctxt, ret, Toast.LENGTH_LONG).show();
         }
     }
+
+    private static Poster poster;
 
 
     private int okColor;
@@ -123,12 +135,18 @@ public class TweetFragment extends Fragment {
     // check for valid tweet
     // handle mashing the submit button
     void post() {
-        new Poster().execute(viewTweet.getText().toString());
+        String tweet = viewTweet.getText().toString();
+        if (!checkTweetLen(tweet.length())) { return; }
+
+        if (null != poster) { return; }
+        if (BuildConfig.DEBUG) { Log.d(TAG, "posting: " + tweet); }
+
+        poster = new Poster(getActivity().getApplicationContext());
+        poster.execute(tweet);
+        viewTweet.setText("");
     }
 
     private boolean checkTweetLen(int n) {
         return (errMax < n) && (tweetLenMax > n);
     }
-
-
 }
