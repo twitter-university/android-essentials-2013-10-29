@@ -1,9 +1,7 @@
 package com.twitter.university.android.yamba;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,48 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.marakana.android.yamba.clientlib.YambaClient;
-import com.marakana.android.yamba.clientlib.YambaClientException;
+import com.twitter.university.android.yamba.svc.YambaService;
 
 public class TweetFragment extends Fragment {
     private static final String TAG = "TWEET";
-
-    public static class Poster extends AsyncTask<String, Void, Integer> {
-        private final Context ctxt;
-
-        public Poster(Context ctxt) { this.ctxt = ctxt; }
-
-        @Override
-        protected Integer doInBackground(String... tweets) {
-            int ret = R.string.tweet_failed;
-            try {
-                new YambaClient("student", "password", "http://yamba.marakana.com/api")
-                    .postStatus(tweets[0]);
-                ret = R.string.tweet_succeeded;
-            }
-            catch (YambaClientException e) {
-                Log.w(TAG, "Post failed", e);
-            }
-
-            return Integer.valueOf(ret);
-        }
-
-        @Override
-        protected void onCancelled() { finish(R.string.tweet_failed); }
-
-        @Override
-        protected void onPostExecute(Integer ret) { finish(ret.intValue()); }
-
-        private void finish(int ret) {
-            poster = null;
-            Toast.makeText(ctxt, ret, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private static Poster poster;
-
 
     private int okColor;
     private int warnColor;
@@ -90,8 +51,7 @@ public class TweetFragment extends Fragment {
 
         buttonSubmit = (Button) v.findViewById(R.id.tweet_submit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { post(); }
+            @Override public void onClick(View view) { post(); }
         });
 
         viewTweet = (EditText) v.findViewById(R.id.tweet_tweet);
@@ -105,7 +65,7 @@ public class TweetFragment extends Fragment {
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int s, int n, int e) { }
-            } );
+            });
 
         return v;
     }
@@ -125,7 +85,7 @@ public class TweetFragment extends Fragment {
         int color;
         if (n > warnMax) { color = okColor; }
         else if (n > errMax) { color = warnColor; }
-        else  { color = errColor; }
+        else { color = errColor; }
 
         viewCount.setText(String.valueOf(n));
         viewCount.setTextColor(color);
@@ -138,11 +98,10 @@ public class TweetFragment extends Fragment {
         String tweet = viewTweet.getText().toString();
         if (!checkTweetLen(tweet.length())) { return; }
 
-        if (null != poster) { return; }
         if (BuildConfig.DEBUG) { Log.d(TAG, "posting: " + tweet); }
 
-        poster = new Poster(getActivity().getApplicationContext());
-        poster.execute(tweet);
+        YambaService.post(getActivity(), tweet);
+
         viewTweet.setText("");
     }
 
