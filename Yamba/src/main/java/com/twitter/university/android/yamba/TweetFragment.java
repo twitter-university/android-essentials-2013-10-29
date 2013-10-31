@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.twitter.university.android.yamba.svc.YambaService;
+import com.twitter.university.android.yamba.service.YambaServiceHelper;
 
 public class TweetFragment extends Fragment {
     private static final String TAG = "TWEET";
@@ -70,7 +70,7 @@ public class TweetFragment extends Fragment {
         return v;
     }
 
-    // Set the value of the count view to be n, 140 - the length of the text in the tweet view
+    // Set the value of the count view to be n, 140 - the length of the text in the yamba view
     // if 140 >= n > 10, count text is green
     // if 10 > n > 0, count text is yellow
     // if 0 > n, count text is red
@@ -91,16 +91,14 @@ public class TweetFragment extends Fragment {
         viewCount.setTextColor(color);
     }
 
-    // clear the tweet box
-    // check for valid tweet
+    // clear the yamba box
+    // check for valid yamba
     // handle mashing the submit button
     void post() {
         String tweet = viewTweet.getText().toString();
         if (!checkTweetLen(tweet.length())) { return; }
 
-        if (BuildConfig.DEBUG) { Log.d(TAG, "posting: " + tweet); }
-
-        YambaService.post(getActivity(), tweet);
+        YambaServiceHelper.post(getActivity(), tweet);
 
         viewTweet.setText("");
     }

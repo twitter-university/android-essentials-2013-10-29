@@ -7,8 +7,13 @@
     <string name="tweet_count">140</string>
     <string name="tweet_tweet">Whazzup?</string>
     <string name="tweet_submit">Submit</string>
-
     <string name="tweet_failed">Post failed!</string>
     <string name="tweet_succeeded">Succeeded!</string>
+    <string name="title_activity_timeline">TimelineActivity</string>
+
+
+    <string name="menu_timeline">Timeline</string>
+    <string name="menu_tweet">Tweet</string>
+    <string name="menu_about">About</string>
 
 </resources>
