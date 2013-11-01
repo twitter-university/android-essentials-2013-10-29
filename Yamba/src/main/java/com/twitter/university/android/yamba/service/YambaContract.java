@@ -108,7 +108,7 @@ public class YambaContract {
         public static class Columns {
             public static final String ID = BaseColumns._ID;
             public static final String HANDLE = "handle";
-            public static final String TWEET = "yamba";
+            public static final String TWEET = "tweet";
             public static final String TIMESTAMP = "timestamp";
 
             public static final String MAX_TIMESTAMP = "max_ts";

@@ -11,12 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.twitter.university.android.yamba.service.YambaContract;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+
 public class TimelineFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int TIMELINE_LOADER = 42;
 
@@ -59,8 +58,7 @@ public class TimelineFragment extends ListFragment implements LoaderManager.Load
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.timeline_row, null, FROM, TO, 0);
-        getListView().setAdapter(adapter);
-
+        setListAdapter(adapter);
 
         getLoaderManager().initLoader(TIMELINE_LOADER, null, this);
 

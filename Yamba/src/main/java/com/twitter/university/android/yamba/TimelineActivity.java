@@ -11,10 +11,12 @@ public class TimelineActivity extends YambaActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_timeline);
+
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new TimelineFragment())
-                    .commit();
+                .add(R.id.timeline_container, new TimelineFragment())
+                .commit();
         }
     }
 }
